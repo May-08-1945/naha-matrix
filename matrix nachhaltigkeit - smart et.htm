@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nachhaltigkeits-Matrix // SMART ET GmbH</title>
+  <style>
+    body, #matrix {
+      font-family: Arial, sans-serif;
+    }
+
+    #matrix {
+      display: grid;
+      grid-template-columns: 17.5% 27.5% 27.5% 27.5%;
+      grid-template-rows: 10% 22% 22% 22% 22%;
+      height: 80vh;
+      width: 100%;
+    }
+
+    .cell {
+      border: 2px solid #fff;
+      padding: 4px;
+      box-sizing: border-box;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header {
+      background: #ddd;
+      color: #000;
+      font-size: 1.2rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #333;
+      color: #fff;
+      font-size: 0.8rem;
+      row-gap: 0px;
+      column-gap: 3px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      max-height: 100%;
+    }
+
+    .smart {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #fff;
+      color: #333;
+      font-size: 0.8rem;
+      row-gap: 0px;
+      column-gap: 3px;
+    }
+
+    .smart-link {
+      color: #FF8D44;
+      text-decoration: none; /* optional: entfernt die Unterstreichung */
+    }
+
+    .smart-link:hover {
+      text-decoration: underline; /* optional: fügt Unterstreichung beim Hover hinzu */
+    }
+
+    .word {
+      display: inline-block;
+      margin: 1px 2px;
+      padding: 1px 4px;
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 4px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      user-select: none;
+      line-height: 1.1;
+    }
+
+    .weight-1 { font-style: italic; font-size: 0.7rem; }
+    .weight-2 { font-style: normal; font-size: 0.8rem; }
+    .weight-3 { font-style: normal; font-weight: bold; font-size: 1rem; }
+
+    .red         { background-color: #e74c3c !important; }
+    .orange      { background-color: #e67e22 !important; }
+    .yellow      { background-color: #f1c40f !important; }
+    .yellowgreen { background-color: #9acd32 !important; }
+    .green       { background-color: #2ecc71 !important; }
+
+    #wordInfo {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #555;
+      min-height: 3em;           /* ca. 3 Zeilenhöhe */
+      line-height: 1.2;          /* Zeilenhöhe definieren */
+      padding: 0.5em;            /* etwas Innenabstand */
+      text-align: left;          /* linksbündig */
+      vertical-align: top;       /* optional, falls inline-block */
+      display: block;            /* sicherstellen, dass es ein Block ist */
+    }
+
+    #controls {
+      margin-top: 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    #companyName {
+      width: 50%;
+      padding: 4px;
+      font-size: 1rem;
+    }
+
+    /* Blinken bei Hover */
+    @keyframes blinkAlpha {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 0.75; }
+    }
+    .blink {
+      animation: blinkAlpha 0.8s infinite;
+    }
+
+    /* Status-Farben */
+    .status-0 { color: #fff; background-color: rgba(255,255,255,0); }
+    .status-1 { color: #000; background-color: rgba(255,255,255,0.5); }
+    .status-2 { color: #000; background-color: rgba(255,255,255,1); }
+  </style>
+</head>
+<body>
+
+  <!-- Matrix -->
+  <div id="matrix">
+    <div class="cell smart">by&nbsp;&nbsp;<a href="https://www.smartet.de/loop/" class="smart-link" target="_blank" rel="noopener noreferrer">SMART ET GmbH</a></div>
+    <div class="cell header">Verantwortung für die Lieferkette</div>
+    <div class="cell header">Verantwortung für die Produktion</div>
+    <div class="cell header">Verantwortung für das Produkt</div>
+
+    <div class="cell header">ökonomische Verantwortung</div>
+    <div class="cell content" data-row="2" data-col="2"></div>
+    <div class="cell content" data-row="2" data-col="3"></div>
+    <div class="cell content" data-row="2" data-col="4"></div>
+
+    <div class="cell header">ökologische Verantwortung</div>
+    <div class="cell content" data-row="3" data-col="2"></div>
+    <div class="cell content" data-row="3" data-col="3"></div>
+    <div class="cell content" data-row="3" data-col="4"></div>
+
+    <div class="cell header">soziale Verantwortung</div>
+    <div class="cell content" data-row="4" data-col="2"></div>
+    <div class="cell content" data-row="4" data-col="3"></div>
+    <div class="cell content" data-row="4" data-col="4"></div>
+
+    <div class="cell header">Firmen-Politik</div>
+    <div class="cell content" data-row="5" data-col="2"></div>
+    <div class="cell content" data-row="5" data-col="3"></div>
+    <div class="cell content" data-row="5" data-col="4"></div>
+  </div>
+
+  <div id="wordInfo"></div>
+
+  <div id="controls">
+    <input type="text" id="companyName"
+           value="Max Mustermann und Söhne GmbH und Co. KG" />
+    <button id="exportBtn">Export CSV</button>
+    <button id="importBtn">Import CSV</button>
+    <input type="file" id="fileInput" accept=".csv" style="display:none" />
+    <button id="helpBtn" style="margin-left:auto;">Hilfe</button>
+  </div>
+
+  <!-- Halbtransparentes Overlay -->
+  <div id="helpOverlay" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.15);
+    z-index:999;
+  "></div>
+
+  <!-- Hilfe-Fenster -->
+  <div id="helpModal" style="
+    display:none;
+    position:fixed;
+    top:20%;
+    left:50%;
+    transform:translateX(-50%);
+    background:#fff;
+    border:2px solid #333;
+    padding:1rem;
+    z-index:1000;
+    width: 50%;
+    max-width: 600px;
+    box-shadow:0 0 10px rgba(0,0,0,0.3);
+    opacity:0.95;
+  ">
+    <h3>⁉️ Hilfe zur Nachhaltigkeits-Matrix</h3>
+    <p>
+      👆 Klicke auf ein Wort, um es halb zu aktivieren.<br>
+      👆 Klicke nochmal, um es ganz zu aktivieren.<br>
+      👆 Der nächste Klick de-aktiviert wieder.<br>
+      🤞 Rechtsklick ändert die Gewichtung eines Wortes.<br>
+      🚦 Je mehr du aktivierst, desto grüner wird die Ampel.<br>
+      👯‍♂️ Zwillinge werden ebenfalls aktiviert bzw. gewichtet.<br>
+      💡 Export/Import: speichere/lade "deine" Matrix lokal.<br>
+       <br>
+      🛠️ Zum Werkzeugkasten Energiewende: <a href="https://www.smartet.de/energie/" class="smart-link" target="_blank" rel="noopener noreferrer">Link</a><br>
+      🛠️ Zum Werkzeugkasten Kreislauf-Wirtschaft (LOOP): <a href="https://www.smartet.de/loop/" class="smart-link" target="_blank" rel="noopener noreferrer">Link</a><br>
+      📄 Zum Infoblatt 10 R: <a href="https://www.smartet.de/app/download/13441280/10r.pdf" class="smart-link" target="_blank" rel="noopener noreferrer">Link</a><br>
+      📄 Zur Schadstoff-Liste: <a href="https://www.smartet.de/app/download/13441960/liste_schadstoffe.xlsx" class="smart-link" target="_blank" rel="noopener noreferrer">Link</a><br><br>
+    </p>
+    <button onclick="closeHelp()">Schließen</button>
+  </div>
+
+    <script>
+    // --------------------------------------------------------------
+    // 1. Wörter/Begriffe pro Matrix-Zelle mit Beschreibung
+    // --------------------------------------------------------------
+    const cellWords = {
+      "2-2": [
+        { word: "ABC-XYZ-Analysen", desc:"Ihr wisst genau, welche Kaufteile ihr in welchen Mengen beschafft. UND ihr wisst, wie gut sich der Absatz der (wichtigsten) Kaufteile vorhersagen lässt. So könnt ihr gutes Beschaffungs- und Engpass-Management betreiben." },
+        { word: "Beschaffungs-Strategie", desc:"Ihr wisst genau, warum ihr bei welchen Lieferanten einkauft. Für Krisen oder Lieferschwierigkeiten habt ihr einen Plan B, einen Plan C, … in der Schublade. Vielleicht sind Redundanzen etwas teurer, schaffen aber Sicherheit (Resilienz)." },
+        { word: "Business Model Canvas", desc:"Ihr habt eine genaue Übersicht über euer Geschäftsmodell. Ihr könnt es Externen in wenigen Minuten erklären. Ihr kennt eure (wichtigsten) Kundensegmente, Schlüssel-Aktivitäten, -Ressourcen und Partner, Kostenstrukturen und Einnahmequellen. Ihr wisst über eure Nutzenversprechen und (Kommunikations- und Waren-) Kanäle gut Bescheid. Allen ist klar, wie ihr eure Kundenbeziehungen pflegt." },
+        { word: "ecovadis-Score (o.ä.)", desc:"ecovadis (und vielleicht auch andere Plattformen) sind ein „Facebook“ für Nachhaltigkeitsdaten. Welche Lieferanten sind top? Welche sind schwierig? Seid ihr selber top? Wer an (viele) große Kunden liefert, sollte sich um seinen Score kümmern. (Der Anfangs-Aufwand ist hoch – danach spart es Verwaltungskosten.)" },
+        { word: "Engpass-Warnsystem", desc:"Ihr schaut regelmäßig, ob eure Bestände sinnvoll sind. Ihr habt eure Lieferzeiten im Blick. Ihr habt die Preis-Entwicklung eurer wichtigsten Rohstoffe und Kaufteile im Blick. Ihr merkt, wenn Preise oder Lieferzeiten sprunghaft steigen. Ihr habt Plan B und Plan C, …, in petto." },
+        { word: "Geodaten Lieferkette", desc:"Ihr wisst, wo eure (wichtigsten / kritischsten / teuersten / …) Kaufteile und Rohstoffe herkommen. Und zwar in Längen- und Breiten-Koordinaten (z.B. aus google Maps). Diese Daten braucht ihr, um zu prüfen, ob ihr Waren aus Risikogebieten (Klimawandel, Dürre, Artensterben, …) bezieht. (→ Risiko-Analyse)" },
+        { word: "Risiko-Analyse (Beschaffung)", desc:"Ihr überprüft regelmäßig eure Beschaffungsrisiken. Vielleicht sogar per bow-tie-Analyse. Welche Produkte haben hohe Fußabdrücke? Wie sehen → Scope 3 und → true costs aus? Welche Lieferanten sind zuverlässig? Für welche Rohstoffe oder Lieferanten oder Liefergebiete (→Geodaten) braucht ihr Plan B und Plan C?" },
+        { word: "Scope-3-Bilanzen", desc:"(Zumindest für die wichtigsten Produkt-Gruppen.) Rohstoffe, Halbzeuge und Kauf-Artikel haben bereits einen Fußabdruck oder beinhalten versteckte Subventionen. Ihr kennt diese und könnt schon im Einkauf auf kleine Fußabdrücke achten. Ihr wisst: Der Fußabdruck aus eurer Fertigung und aus nachgelagerten Prozessen kommt da noch oben drauf. → true cost." },
+        { word: "true-cost-Analysen", desc:"„True cost“ sind die wirklichen, wirklichen(!) Kosten für eure Produkte + die gesellschaftlichen Kosten, die durch deren Nutzung, ihren Missbrauch, durch Unfälle oder falsche Entsorgungen entstehen. Das „Verursacher-Prinzip“ verbietet versteckte Subventionen (eigentlich), z.B. dass CO₂-Emissionen oder Überdüngung nahezu kostenfrei sind. Versteckte Subventionen sind immer als Risiko zu betrachten, weil sie der politischen Meinungsbildung unterliegen und „von heute auf morgen“ verboten oder bepreist werden können." },
+        { word: "TCO beachten", desc:"Wenn ihr etwas kauft, dann erzeugt das oft 3x Kosten: Beschaffungskosten, Betriebskosten (oder Nutzungskosten) und Entsorgungskosten (Erlöse sind hier „negative Kosten“). Es ist schlau, wenn ihr bei teuren und/oder langfristigen Anschaffungen immer alle 3 Kosten analysiert und bewertet." },
+        { word: "traceability (digital)", desc:"Ihr nutzt technische Hilfsmittel, um eure Waren und Rohstoffe (zurück) zu verfolgen. Z.B. Datenbanken, QR-Codes, digitaler Produktpass, … Ihr könnt euren Kundinnen und Kunden Produkt-, Rohstoff-, …-, Fertigungs-Daten in einem digitalen Produktpass weitergeben. Abstufung: Ihr plant das zumindest und bleibt technisch  / IT-technisch auf dem Laufenden." }
+      ],
+      "2-3": [
+        { word: "digitalisierte Planung", desc:"Dank digitaler Planungs-Werkzeuge und guter Datenbasis könnt ihr eure Arbeit kurzfristig planen oder umplanen. Ihr könnt Planungs-Schritte ggfs. automatisieren." },
+        { word: "Elektrifizierung", desc:"Wärme und Mobilität werden bei euch elektrisch. Ihr habt einen Plan, wie und wann ihr das schafft. Ihr habt die passenden Partner. Ihr seid mit eurem Netzbetreiber im Gespräch. Ihr nutzt die Sektoren-Kopplung um Strom z.B. als Wärme oder Kälte oder in Fahrzeugbatterien zu puffern." },
+        { word: "Energieeffizienz", desc:"Ihr kauft und nutzt energie-effiziente Technologien. Ihr prüft regelmäßig, ob noch Luft nach oben ist. Ihr nutzt ggfs. externe Beratung, um euch vor Betriebs-Blindheit zu schützen." },
+        { word: "EnergyScouts o.ä.", desc:"Ihr nutzt die kostenfreien Angebote der IHKn oder ähnlicher Initiativen. Falls eure IHK schläft: ihr macht eure Azubis selber fit und lasst sie Projekt-Arbeiten im Unternehmen für mehr Energie- oder Ressourcen-Effizienz machen." },
+        { word: "Flexibilisierung", desc:"Dank digitaler Planungs-Werkzeuge und guter Datenbasis könnt ihr eure Arbeit kurzfristig planen oder umplanen. Ihr könnt zügig auf Überraschungen reagieren. Ihr könnt eure Produktion abhängig von externen Faktoren verändern, z.B. energie-intensive Arbeiten nur dann, wenn Strom billig ist." },
+        { word: "Instandhaltungs-Strategie", desc:"Für eure Maschinen und Anlagen sorgt ihr vorbildlich. Ihr wisst genau, wie oft welche Anlage gewartet, gereinigt und gepflegt werden muss. Ihr habt einen Plan, wer für was verantwortlich ist. Auf Feedback eurer Verantwortlichen reagiert ihr angemessen. Wenn ihr Dienstleister für die Instandhaltung braucht, werden diese rechtzeitig beauftragt und zuvorkommend behandelt." },
+        { word: "Materialeffizienz", desc:"Ihr habt eure Prozesse und eure Lagerflächen im Griff. Ihr kauft und lagert nur Waren, die ihr wirklich, wirklich braucht. Es ist glasklar, was bei euch im Abfall landet. Es ist glasklar, wie ihr mit Ausschuss oder fehlerhaften Produkten umgeht. Es gibt Verantwortliche, die ihr im Zweifel ansprecht. Ihr macht regelmäßig Audits um Verschwendung aufzudecken." },
+        { word: "PM, QM und QS", desc:"Ihr nutzt die Werkzeuge aus Prozess-Management (PM), Qualitäts-Management (QM) und Qualitäts-Sicherung (QS) um zielsicher gegen Verschwendung, Ausschuss, Fehlproduktion und Mehrkosten vorzugehen. Für Aufgaben, die immer gleich sind, habt ihr Standards (die ihr immer weiter automatisieren könnt). Für alles andere seid ihr ausreichend flexibel bzw. agil." },
+        { word: "TCO beachten", desc:"Wenn ihr etwas kauft, dann erzeugt das oft 3x Kosten: Beschaffungskosten, Betriebskosten (oder Nutzungskosten) und Entsorgungskosten (Erlöse sind hier „negative Kosten“). Es ist schlau, wenn ihr bei teuren und/oder langfristigen Anschaffungen immer alle 3 Kosten analysiert und bewertet." }
+      ],
+      "2-4": [
+        { word: "(Kinder-)sichere Produkte", desc:"Eure Produkte sind so designt, dass Schäden für Nutzerinnen und Nutzer (auch für Kinder) möglichst ausgeschlossen sind. Mögliche Schadwirkungen habt ihr transparent gemacht (z.B. Zucker macht Karies)." },
+        { word: "after-sales-Lösungen", desc:"Euer Kundenkontakt bleibt nach dem Kauf bestehen. Eure Kundschaft hat z.B. Zugriff auf hochwertige Ersatzteile oder auf euren Service." },
+        { word: "Business Model Canvas", desc:"Ihr habt eine genaue Übersicht über euer Geschäftsmodell. Ihr könnt es Externen in wenigen Minuten erklären. Ihr kennt eure (wichtigsten) Kundensegmente, Schlüssel-Aktivitäten, -Ressourcen und Partner, Kostenstrukturen und Einnahmequellen. Ihr wisst über eure Nutzenversprechen und (Kommunikations- und Waren-) Kanäle gut Bescheid. Allen ist klar, wie ihr eure Kundenbeziehungen pflegt." },
+        { word: "LCC-Analyse & -Design", desc:"Ihr wisst, welche Folgekosten eure Produkte im Betrieb und nach Lebensende verursachen. Ihr optimiert eure Produkte auf geringst-mögliche Folgekosten. Ihr nehmt auch versteckte Folgekosten ernst. (Unfälle, Missbrauch, versteckte Subventionen; → true cost)." },
+        { word: "Modulbauweise", desc:"Eure Produkte sind modular entwickelt. Falls mal eine Komponente kaputt geht, kann diese unabhängig von anderen Komponenten getauscht oder repariert werden. Ggfs. kann euer Produkt wertvoller werden, wenn einzelne Komponenten ausgetauscht werden oder ein Upgrade bekommen." },
+        { word: "open innovation", desc:"Ihr bezieht eure Kundinnen und Kunden, eure Geschäftspartner und andere Stakeholder in eure Produkt-Entwicklung und Markt-Aktivitäten ein. Ihr kommuniziert mit euren Partnern in beide Richtungen. Ihr honoriert Ideen von anderen und sattelt darauf auf." },
+        { word: "Scope-3-Bilanzen", desc:"(Zumindest für die wichtigsten Produkt-Gruppen.) Rohstoffe, Halbzeuge und Kauf-Artikel haben bereits einen Fußabdruck oder beinhalten versteckte Subventionen. Ihr kennt diese und könnt schon im Einkauf auf kleine Fußabdrücke achten. Ihr wisst: Der Fußabdruck aus eurer Fertigung und aus nachgelagerten Prozessen kommt da noch oben drauf. → true cost." },
+        { word: "Service- & Abo-Modelle", desc:"Ihr verdient Geld mit dem Verleih oder der Nutzung von Produkten. Oder durch Dienstleistung. (Das ist ein wenig wie der Unterschied zwischen Pilotin und Flugzeugherstellerin)." }
+      ],
+      "3-2": [
+        { word: "Beschaffungs-Strategie", desc:"Ihr wisst genau, warum ihr bei welchen Lieferanten einkauft. Für Krisen oder Lieferschwierigkeiten habt ihr einen Plan B, einen Plan C, … in der Schublade. Vielleicht sind Redundanzen etwas teurer, schaffen aber Sicherheit (Resilienz)." },
+        { word: "Business Model Canvas", desc:"Ihr habt eine genaue Übersicht über euer Geschäftsmodell. Ihr könnt es Externen in wenigen Minuten erklären. Ihr kennt eure (wichtigsten) Kundensegmente, Schlüssel-Aktivitäten, -Ressourcen und Partner, Kostenstrukturen und Einnahmequellen. Ihr wisst über eure Nutzenversprechen und (Kommunikations- und Waren-) Kanäle gut Bescheid. Allen ist klar, wie ihr eure Kundenbeziehungen pflegt." },
+        { word: "Einkaufs-Bilanz", desc:"Ihr wisst genau, wofür ihr Geld ausgebt. Welche Waren kauft ihr wie oft ein? Was sind die wichtigsten Kaufteile? Und in welche Cluster kann man sie zusammenfassen?" },
+        { word: "FSC, Fairtrade, Bio & Co.", desc:"Ihr achtet beim Einkauf auf die bestmögliche Herkunft und Entstehung für eure Rohstoffe. Ihr nutzt vorhandene Siegel und Standards (auch wenn manche noch ausbaufähig sind). Ihr bevorzugt saubere, faire und verlässliche Partner (das tun eure Kunden doch auch, wenn sie bei euch kaufen!)." },
+        { word: "Geodaten Lieferkette", desc:"Ihr wisst, wo eure (wichtigsten / kritischsten / teuersten / …) Kaufteile und Rohstoffe herkommen. Und zwar in Längen- und Breiten-Koordinaten (z.B. aus google Maps). Diese Daten braucht ihr, um zu prüfen, ob ihr Waren aus Risikogebieten (Klimawandel, Dürre, Artensterben, …) bezieht. (→ Risiko-Analyse)" },
+        { word: "grüne Logistik", desc:"Ihr legt Wert auf sauberen Transport. Dafür habt ihr passende Partner mit sauberer Technologie. Eure Scope-1 und Scope-3-Emissionen für den Transport werden somit winzig. Das macht euch unabhängig von versteckten Subventionen (→ true cost)" },
+        { word: "grüne Verpackung", desc:"Ihr legt Wert auf grüne Verpackung und beachtet folgende Hierarchie: Suffizienz vor Konsistenz vor Effizienz. Auf deutsch: Verzichten, wo möglich. Wenn verpacken, dann so sauber wie möglich und so wenig wie möglich. Z.B. lieber ᴋᴇɪɴᴇ Verpackung. Lieber (FSC-)Pappe als Kunststoff. Lieber wenig Pappe als viel Pappe." },
+        { word: "Scope-3-Bilanzen", desc:"(Zumindest für die wichtigsten Produkt-Gruppen.) Rohstoffe, Halbzeuge und Kauf-Artikel haben bereits einen Fußabdruck oder beinhalten versteckte Subventionen. Ihr kennt diese und könnt schon im Einkauf auf kleine Fußabdrücke achten. Ihr wisst: Der Fußabdruck aus eurer Fertigung und aus nachgelagerten Prozessen kommt da noch oben drauf. → true cost." },
+        { word: "Screening Schadstoffe", desc:"Ihr wisst, welche Schadstoffe in eueren Rohstoffen und Kaufteilen enthalten sind. Ihr prüft zumindest regelmäßig, ob eure wichtigsten Rohstoffe meldepflichtige Schadstoffe enthalten können (oder ob diese bei der Entstehung freigesetzt werden). Gleicht dazu gern die Liste ab, die in der Hilfe-Box verlinkt ist. (Das ist auch eine prima Aufgabe für →EnergyScouts, Werk-Studies und Co.) Hilfe-Button: siehe ganz unten rechts." },
+        { word: "Sekundär-Rohstoffe", desc:"Ihr nutzt (auch) Rohstoffe, die schon einmal Rohstoff waren. Ihr prüft, wo Recycling-Material eure Produkt-Anforderungen erfüllt. Den Kosten-Unterschied zwischen Recycling-Material und Ur-Rohstoff habt ihr im Blick. Euch ist bewusst, dass dieser Preis-Unterschied auch der politischen Meinungsbildung unterliegt (→ true cost)" },
+        { word: "traceability (digital)", desc:"Ihr nutzt technische Hilfsmittel, um eure Waren und Rohstoffe (zurück) zu verfolgen. Z.B. Datenbanken, QR-Codes, digitaler Produktpass, … Ihr könnt euren Kundinnen und Kunden Produkt-, Rohstoff-, …-, Fertigungs-Daten in einem digitalen Produktpass weitergeben. Abstufung: Ihr plant das zumindest und bleibt technisch  / IT-technisch auf dem Laufenden." }
+      ],
+      "3-3": [
+        { word: "Elektrifizierung", desc:"Wärme und Mobilität werden bei euch elektrisch. Ihr habt einen Plan, wie und wann ihr das schafft. Ihr habt die passenden Partner. Ihr seid mit eurem Netzbetreiber im Gespräch. Ihr nutzt die Sektoren-Kopplung um Strom z.B. als Wärme oder Kälte oder in Fahrzeugbatterien zu puffern." },
+        { word: "Energieeffizienz", desc:"Ihr kauft und nutzt energie-effiziente Technologien. Ihr prüft regelmäßig, ob noch Luft nach oben ist. Ihr nutzt ggfs. externe Beratung, um euch vor Betriebs-Blindheit zu schützen." },
+        { word: "EnergyScouts o.ä.", desc:"Ihr nutzt die kostenfreien Angebote der IHKn oder ähnlicher Initiativen. Falls eure IHK schläft: ihr macht eure Azubis selber fit und lasst sie Projekt-Arbeiten im Unternehmen für mehr Energie- oder Ressourcen-Effizienz machen." },
+        { word: "Flexibilisierung", desc:"Dank digitaler Planungs-Werkzeuge und guter Datenbasis könnt ihr eure Arbeit kurzfristig planen oder umplanen. Ihr könnt zügig auf Überraschungen reagieren. Ihr könnt eure Produktion abhängig von externen Faktoren verändern, z.B. energie-intensive Arbeiten nur dann, wenn Strom billig ist." },
+        { word: "Instandhaltungs-Strategie", desc:"Für eure Maschinen und Anlagen sorgt ihr vorbildlich. Ihr wisst genau, wie oft welche Anlage gewartet, gereinigt und gepflegt werden muss. Ihr habt einen Plan, wer für was verantwortlich ist. Auf Feedback eurer Verantwortlichen reagiert ihr angemessen. Wenn ihr Dienstleister für die Instandhaltung braucht, werden diese rechtzeitig beauftragt und zuvorkommend behandelt." },
+        { word: "Kreislaufführung", desc:"Rohstoffe und Energie (Abwärme) verwendet ihr mehrfach – zumindest, so gut es geht. Bei euch entstehen wenig Abfall und Verschwendung. Im Idealfall ist der „Abfall“ aus Vorprozessen ein Rohstoff für Folgeprozesse." },
+        { word: "Materialeffizienz", desc:"Ihr habt eure Prozesse und eure Lagerflächen im Griff. Ihr kauft und lagert nur Waren, die ihr wirklich, wirklich braucht. Es ist glasklar, was bei euch im Abfall landet. Es ist glasklar, wie ihr mit Ausschuss oder fehlerhaften Produkten umgeht. Es gibt Verantwortliche, die ihr im Zweifel ansprecht. Ihr macht regelmäßig Audits um Verschwendung aufzudecken." },
+        { word: "PM, QM und QS", desc:"Ihr nutzt die Werkzeuge aus Prozess-Management (PM), Qualitäts-Management (QM) und Qualitäts-Sicherung (QS) um zielsicher gegen Verschwendung, Ausschuss, Fehlproduktion und Mehrkosten vorzugehen. Für Aufgaben, die immer gleich sind, habt ihr Standards (die ihr immer weiter automatisieren könnt). Für alles andere seid ihr ausreichend flexibel bzw. agil." },
+        { word: "regenerative Energie", desc:"Ihr nutzt grüne Energie. Im besten Fall vom eigenen Dach oder von eigenen Flächen. Ggfs. auch aus der Nachbarschaft. Zur Not beschafft ihr Ökostrom. Eure Erzeugungs-Anlagen werden durch geeignete Puffer kostengünstig und netzdienlich." },
+        { word: "Screening Schadstoffe", desc:"Ihr wisst, welche Schadstoffe in eueren Rohstoffen und Kaufteilen enthalten sind. Ihr prüft zumindest regelmäßig, ob eure wichtigsten Rohstoffe meldepflichtige Schadstoffe enthalten können (oder ob diese bei der Entstehung freigesetzt werden). Gleicht dazu gern die Liste ab, die in der Hilfe-Box verlinkt ist. (Das ist auch eine prima Aufgabe für →EnergyScouts, Werk-Studies und Co.) Hilfe-Button: siehe ganz unten rechts." },
+        { word: "Bilanzen Scope 1+2", desc:"Ihr kennt eure Verbrauchs-Daten. Wie viele Rohstoffe, Strom, Brennstoffe, Wasser … kauft ihr im Jahr? Wie viele Brennstoffe verbrennt ihr im Jahr? In welche wichtigen Gruppen lassen sich eure Kaufteile und Rohstoffe zusammenfassen? Wieviel Wasser wird Abwasser? Welche Emissionen tätigt ihr?" }
+      ],
+      "3-4": [
+        { word: "10-R-Framework", desc:"Ihr kennt und nutzt das 10-R-Framework bzw. die R-Strategien in der Produkt-Entwicklung. Im Hilfe-Menü ist ein Infoblatt zu den 10 R verlinkt (Button ganz unten rechts)." },
+        { word: "after-sales-Lösungen", desc:"Euer Kundenkontakt bleibt nach dem Kauf bestehen. Eure Kundschaft hat z.B. Zugriff auf hochwertige Ersatzteile oder auf euren Service." },
+        { word: "Business Model Canvas", desc:"Ihr habt eine genaue Übersicht über euer Geschäftsmodell. Ihr könnt es Externen in wenigen Minuten erklären. Ihr kennt eure (wichtigsten) Kundensegmente, Schlüssel-Aktivitäten, -Ressourcen und Partner, Kostenstrukturen und Einnahmequellen. Ihr wisst über eure Nutzenversprechen und (Kommunikations- und Waren-) Kanäle gut Bescheid. Allen ist klar, wie ihr eure Kundenbeziehungen pflegt." },
+        { word: "design for disassembly", desc:"Eure Produkte sind so konstruiert, dass sie leicht zu de-montieren sind. So lassen sich entweder defekte Komponenten austauschen oder intakte Komponenten können an anderer Stelle weitergenutzt werden." },
+        { word: "design for durability", desc:"Eure Produkte sind so konstruiert, dass sie möglichst lange halten. Sollte ein Teil einer Baugruppe kaputt gehen, ist entweder die Reparatur einfach oder die intakten Komponenten können (an anderer Stelle weitergenutzt oder zurückgewonnen werden)." },
+        { word: "frugale Lösungen", desc:"Ihr verzichtet auf (teuren) Schnickschnack bei euren Produkten, Services und Verpackungen. Ein Schreibtisch-Stuhl mit 34 Massage-Funktionen? Eine App für einen Wasserkocher? Eure Entwicklungs-Teams haben hoffentlich wichtigere Probleme zu lösen!" },
+        { word: "LCC-Analyse & -Design", desc:"Ihr wisst, welche Folgekosten eure Produkte im Betrieb und nach Lebensende verursachen. Ihr optimiert eure Produkte auf geringst-mögliche Folgekosten. Ihr nehmt auch versteckte Folgekosten ernst. (Unfälle, Missbrauch, versteckte Subventionen; → true cost)." },
+        { word: "open innovation", desc:"Ihr bezieht eure Kundinnen und Kunden, eure Geschäftspartner und andere Stakeholder in eure Produkt-Entwicklung und Markt-Aktivitäten ein. Ihr kommuniziert mit euren Partnern in beide Richtungen. Ihr honoriert Ideen von anderen und sattelt darauf auf." },
+        { word: "Rücknahme-Lösungen", desc:"Nach dem Lebens-Ende nehmt ihr eure Produkte zurück. Die dort enthaltenen Rohstoffe oder brauchbare Module nutzt ihr für Neu-Produkte weiter (→10-R; → modulares Design)." },
+        { word: "Scope-3-Bilanzen", desc:"(Zumindest für die wichtigsten Produkt-Gruppen.) Rohstoffe, Halbzeuge und Kauf-Artikel haben bereits einen Fußabdruck oder beinhalten versteckte Subventionen. Ihr kennt diese und könnt schon im Einkauf auf kleine Fußabdrücke achten. Ihr wisst: Der Fußabdruck aus eurer Fertigung und aus nachgelagerten Prozessen kommt da noch oben drauf. → true cost." },
+        { word: "Transparenz", desc:"Eure Kundinnen und Kunden können (ggfs. auf Nachfrage) gut einsehen, was genau sie bei euch einkaufen. Ihr macht transparent…: …welche Rohstoffe ihr nutzt. Woher ihr Rohstoffe bezieht. …Wie eure Produkte zu recyclen sind. …Welche versteckten Subventionen eure Produkte ggfs. enthalten (→ true cost). …" }
+      ],
+      "4-2": [
+        { word: "Business Model Canvas", desc:"Ihr habt eine genaue Übersicht über euer Geschäftsmodell. Ihr könnt es Externen in wenigen Minuten erklären. Ihr kennt eure (wichtigsten) Kundensegmente, Schlüssel-Aktivitäten, -Ressourcen und Partner, Kostenstrukturen und Einnahmequellen. Ihr wisst über eure Nutzenversprechen und (Kommunikations- und Waren-) Kanäle gut Bescheid. Allen ist klar, wie ihr eure Kundenbeziehungen pflegt." },
+        { word: "Diversität & Inklusion", desc:"Bei euch (und euren Lieferanten) arbeiten alle gern. Auch alle, die 🏳️‍🌈 mögen oder Migrationshintergrund haben oder Behinderungen haben, … Und ihr kümmert euch darum, dass es so bleibt." },
+        { word: "Einkaufs-Bilanz", desc:"Ihr wisst genau, wofür ihr Geld ausgebt. Welche Waren kauft ihr wie oft ein? Was sind die wichtigsten Kaufteile? Und in welche Cluster kann man sie zusammenfassen?" },
+        { word: "Feedback ermöglichen", desc:"Eure Belegschaft, eure Kundschaft oder eure Lieferanten haben klare Ansprech-Personen bzw. definierte Kanäle für Rückmeldungen bei Frust, bei Problemen für Lob und Kritik, …" },
+        { word: "FSC, Fairtrade, Bio & Co.", desc:"Ihr achtet beim Einkauf auf die bestmögliche Herkunft und Entstehung für eure Rohstoffe. Ihr nutzt vorhandene Siegel und Standards (auch wenn manche noch ausbaufähig sind). Ihr bevorzugt saubere, faire und verlässliche Partner (das tun eure Kunden doch auch, wenn sie bei euch kaufen!)." },
+        { word: "Geodaten Lieferkette", desc:"Ihr wisst, wo eure (wichtigsten / kritischsten / teuersten / …) Kaufteile und Rohstoffe herkommen. Und zwar in Längen- und Breiten-Koordinaten (z.B. aus google Maps). Diese Daten braucht ihr, um zu prüfen, ob ihr Waren aus Risikogebieten (Klimawandel, Dürre, Artensterben, …) bezieht. (→ Risiko-Analyse)" },
+        { word: "Lieferanten-Audit", desc:"Eure wichtigsten Lieferanten kennt ihr gut. Ihr arbeitet zusammen und besucht euch, wenn möglich. Lieferantinnen und Lieferanten aus Entwicklungs-Ländern begleitet ihr ggfs. in ihrer Entwicklung. Bei Lieferanten für kritische Materialien seid ihr besonders sorgsam. Bezüglich neuer oder verschärfter Nachhaltigkeits-Anforderungen seid ihr im Dialog." },
+        { word: "Partnerschaften mit NGOs", desc:"Ihr bindet Expertinnen und Experten ein, die sich vor Ort oder in der Thematik gut auskennen. Ihr nehmt zumindest Hinweise von sachkenntlichen NGOs ernst." },
+        { word: "SDG-Check", desc:"Ihr wisst genau, auf welche globalen Nachhaltigkeits-Ziele (SDGs) eure Produkte einzahlen. Und wo sie einen Zielkonflikt darstellen. Euch ist bewusst, dass Zielkonflikte ein Risiko für eure Geschäftsmodelle darstellen (→ Risiko-Analyse; → true costs)." },
+        { word: "traceability (digital)", desc:"Ihr nutzt technische Hilfsmittel, um eure Waren und Rohstoffe (zurück) zu verfolgen. Z.B. Datenbanken, QR-Codes, digitaler Produktpass, … Ihr könnt euren Kundinnen und Kunden Produkt-, Rohstoff-, …-, Fertigungs-Daten in einem digitalen Produktpass weitergeben. Abstufung: Ihr plant das zumindest und bleibt technisch  / IT-technisch auf dem Laufenden." }
+      ],
+      "4-3": [
+        { word: "(über-)tarifliche Bezahlung", desc:"Eure Beschäftigten werden fair bezahlt. Ggfs. werden sie an guten Unternehmens-Ergebnissen beteiligt." },
+        { word: "Arbeitsschutz + Prophylaxe", desc:"Arbeitsschutz ist sowieso Gesetz. Auch psychische Gefährdungs-Beurteilungen. Seid ihr voll dabei? Oder ist noch Luft nach oben? Oder tut ihr sogar mehr als nötig, damit eure Beschäftigten möglichst lange fit bleiben?" },
+        { word: "Befähigung & Ermächtigung", desc:"Wenn ihr Beschäftigte zu Verantwortlichen macht, dann werden diese auch gut geschult und erhalten brauchbare Budgets und Befugnisse um ihre Zusatz-Aufgaben gut und reibungsfrei zu erledigen." },
+        { word: "Beteiligung Beschäftigte", desc:"Eure Kolleginnen und Kollegen werden bestmöglich eingebunden. Allen ist klar, wo sie ein Recht auf Information haben. Alle wissen, wo sie mitdenken und mitentscheiden dürfen (und sollen)." },
+        { word: "Diversität & Inklusion", desc:"Bei euch (und euren Lieferanten) arbeiten alle gern. Auch alle, die 🏳️‍🌈 mögen oder Migrationshintergrund haben oder Behinderungen haben, … Und ihr kümmert euch darum, dass es so bleibt." },
+        { word: "equal pay", desc:"Frauen und Männer werden bei euch gleichwertig bezahlt." },
+        { word: "Flexibilisierung", desc:"Dank digitaler Planungs-Werkzeuge und guter Datenbasis könnt ihr eure Arbeit kurzfristig planen oder umplanen. Ihr könnt zügig auf Überraschungen reagieren. Ihr könnt eure Produktion abhängig von externen Faktoren verändern, z.B. energie-intensive Arbeiten nur dann, wenn Strom billig ist." },
+        { word: "flexible Arbeitszeiten", desc:"Wo immer es geht, nehmt ihr Rücksicht auf die zeitlichen Bedürfnisse und Einschränkungen eurer Kolleginnen und Kollegen. Wer privat Kranke, Alte oder Kinder pflegt oder nur eingeschränkt belastbar ist, kann problemlos in Teilzeit arbeiten. Unabhängig von Alter oder Geschlecht!" },
+        { word: "Personal-Entwicklung", desc:"Unsere (Wirtschafts-)Welt ist im Wandel. Also ist (hoffentlich) auch euer Unternehmen im Wandel – mehr denn je und schneller denn je. Ihr macht eure Beschäftigten fit für alle Veränderungen. Falls ihr doch mal ein Geschäftsmodell aufgeben müsst, bindet ihr „freigewordene“ Kolleginnen und Kollegen in anderen Bereichen ein. Wer euch verlässt oder verlassen muss, ist gut qualifiziert für neue Herausforderungen." },
+        { word: "sinnstiftende Arbeit", desc:"Eure Beschäftigten wissen, wie ihre Arbeit funktioniert, was sie gut können und was für bessere Ergebnisse erforderlich ist. Ihr fördert sie bestmöglich dabei. → Personal-Entwicklung. Eure Firmenpolitik setzt auf eine Belegschaft, die sich einbringt und mitdenkt (statt ihr Hirn am Werkstor abgeben zu müssen)." }
+      ],
+      "4-4": [
+        { word: "(Kinder-)sichere Produkte", desc:"Eure Produkte sind so designt, dass Schäden für Nutzerinnen und Nutzer (auch für Kinder) möglichst ausgeschlossen sind. Mögliche Schadwirkungen habt ihr transparent gemacht (z.B. Zucker macht Karies)." },
+        { word: "Business Model Canvas", desc:"Ihr habt eine genaue Übersicht über euer Geschäftsmodell. Ihr könnt es Externen in wenigen Minuten erklären. Ihr kennt eure (wichtigsten) Kundensegmente, Schlüssel-Aktivitäten, -Ressourcen und Partner, Kostenstrukturen und Einnahmequellen. Ihr wisst über eure Nutzenversprechen und (Kommunikations- und Waren-) Kanäle gut Bescheid. Allen ist klar, wie ihr eure Kundenbeziehungen pflegt." },
+        { word: "Datenschutz & Nutzungsrechte", desc:"Eure Kunden und ihre Kundendaten sind bei euch absolut sicher. Ihr erhebt nur Daten, die ihr für gute Arbeit und guten Service (und zum Einhalten von Gesetzen) braucht." },
+        { word: "Feedback ermöglichen", desc:"Eure Belegschaft, eure Kundschaft oder eure Lieferanten haben klare Ansprech-Personen bzw. definierte Kanäle für Rückmeldungen bei Frust, bei Problemen für Lob und Kritik, …" },
+        { word: "frugale Lösungen", desc:"Ihr verzichtet auf (teuren) Schnickschnack bei euren Produkten, Services und Verpackungen. Ein Schreibtisch-Stuhl mit 34 Massage-Funktionen? Eine App für einen Wasserkocher? Eure Entwicklungs-Teams haben hoffentlich wichtigere Probleme zu lösen!" },
+        { word: "inklusives Design", desc:"Auch Kinder, Alte oder Behinderte können eure Produkte gefahrlos und frustfrei nutzen. Auch Analphabetinnen, Analphabeten oder fremdsprachige Menschen können eure Produkte nutzen." },
+        { word: "Rücknahme-Lösungen", desc:"Nach dem Lebens-Ende nehmt ihr eure Produkte zurück. Die dort enthaltenen Rohstoffe oder brauchbare Module nutzt ihr für Neu-Produkte weiter (→10-R; → modulares Design)." },
+        { word: "SDG-Check", desc:"Ihr wisst genau, auf welche globalen Nachhaltigkeits-Ziele (SDGs) eure Produkte einzahlen. Und wo sie einen Zielkonflikt darstellen. Euch ist bewusst, dass Zielkonflikte ein Risiko für eure Geschäftsmodelle darstellen (→ Risiko-Analyse; → true costs)." },
+        { word: "Technik-Folgen-Abschätzung", desc:"Jedes Produkt verursacht Folgekosten. Einige Produkte richten Umwelt-Schäden oder andere Schäden bei der Benutzung an (Autos produzieren Reifenabrieb, viel Zucker macht krank…). Das Verursacher-Prinzip fordert zumindest die volle Transparenz über Folgekosten (→ true cost)." }
+      ],
+      "5-2": [
+        { word: "Beschaffungs-Strategie", desc:"Ihr wisst genau, warum ihr bei welchen Lieferanten einkauft. Für Krisen oder Lieferschwierigkeiten habt ihr einen Plan B, einen Plan C, … in der Schublade. Vielleicht sind Redundanzen etwas teurer, schaffen aber Sicherheit (Resilienz)." },
+        { word: "Business Model Canvas", desc:"Ihr habt eine genaue Übersicht über euer Geschäftsmodell. Ihr könnt es Externen in wenigen Minuten erklären. Ihr kennt eure (wichtigsten) Kundensegmente, Schlüssel-Aktivitäten, -Ressourcen und Partner, Kostenstrukturen und Einnahmequellen. Ihr wisst über eure Nutzenversprechen und (Kommunikations- und Waren-) Kanäle gut Bescheid. Allen ist klar, wie ihr eure Kundenbeziehungen pflegt." },
+        { word: "Engpass-Warnsystem", desc:"Ihr schaut regelmäßig, ob eure Bestände sinnvoll sind. Ihr habt eure Lieferzeiten im Blick. Ihr habt die Preis-Entwicklung eurer wichtigsten Rohstoffe und Kaufteile im Blick. Ihr merkt, wenn Preise oder Lieferzeiten sprunghaft steigen. Ihr habt Plan B und Plan C, …, in petto." },
+        { word: "Feedback ermöglichen", desc:"Eure Belegschaft, eure Kundschaft oder eure Lieferanten haben klare Ansprech-Personen bzw. definierte Kanäle für Rückmeldungen bei Frust, bei Problemen für Lob und Kritik, …" },
+        { word: "Rechtskataster", desc:"Natürlich kümmert ihr euch um die geltenden Gesetze. Dafür pflegt ihr eine brauchbare Übersicht und habt Verantwortliche benannt." },
+        { word: "regelmäßige Reviews", desc:"Eure Geschäftsführung fordert regelmäßig Rechenschaft ein und denkt mit. Sie prüft regelmäßig, ob eure Ziele klar, eure Roadmaps plausibel und eure Strategien noch zeitgemäß sind. Bei Bedarf werden Ressourcen und Befugnisse neu verteilt." },
+        { word: "Risiko-Analyse (Beschaffung)", desc:"Ihr überprüft regelmäßig eure Beschaffungsrisiken. Vielleicht sogar per bow-tie-Analyse. Welche Produkte haben hohe Fußabdrücke? Wie sehen → Scope 3 und → true costs aus? Welche Lieferanten sind zuverlässig? Für welche Rohstoffe oder Lieferanten oder Liefergebiete (→Geodaten) braucht ihr Plan B und Plan C?" },
+        { word: "überbetrieblicher Austausch", desc:"Ihr bleibt auf dem Laufenden. Eure Energie- und Umwelt-Profis oder IT-Nerds oder … tauschen sich mit denen aus anderen Unternehmen aus. Ihr nutzt öffentliche Arbeitskreise (z.B. bei der IHK) oder Angebote wie ÖKOprofit, LEEN, EnergyScouts, … Ihr bringt euch in eurer lokalen Wirtschaftsförderung fördernd und fordernd ein." },
+        { word: "Verantwortliche benennen", desc:"Für neue Aufgaben und kontinuierliche Veränderung muss jemand Verantwortung übernehmen. Ihr benennt dafür Verantwortliche, die sich um das Erreichen der Ziele, um die Kommunikation zu top-Management und Belegschaft, zum Einhalten von Fristen, um technische Umsetzung, … kümmern. Ideal: Eure Verantwortlichen schult ihr inner- oder außerbetrieblich (→Verantwortliche befähigen)" },
+        { word: "Werte-Kodex", desc:"Bei euch ist klar, wie der Hase in puncto Nachhaltigkeit läuft. Ihr habt do’s und dont’s entwickelt, die euch vor Endlos-Debatten, „des Kaisers neue Kleider“ und Co. schützen. Es ist glasklar erwünscht, den Finger in (Nachhaltigkeits-)Wunden zu legen." },
+        { word: "Wissens-Management", desc:"Das Thema Nachhaltigkeit ist riesig und kompliziert. Notwendiges Wissen und Können ist für gewöhnlich auf wenige Köpfe verteilt (individuelles Wissen). Wichtiger ist „organisationales Wissen“, also Wissen, das alle haben (können). Ähnlich wie bei Wikipedia teilen eure Fachleute und Verantwortliche ihr Wissen. Ihr habt Strukturen zum Sammeln und Austauschen von Wissen geschaffen, z.B. im Intranet, auf einem Laufwerk, in einer Akademie, an Aktionstagen oder …" }
+      ],
+      "5-3": [
+        { word: "Digitalisierungs-Strategie", desc:"Ihr wisst genau, welche Ziele und Meilensteine ihr bei der Digitalisierung eurer Verwaltung, eurer Fertigungs- und Geschäfts-Prozesse und in der Kommunikation mit Partnern habt. Ihr habt Verantwortliche benannt, die immer weiter befähigt und ermächtigt werden." },
+        { word: "Instandhaltungs-Strategie", desc:"Für eure Maschinen und Anlagen sorgt ihr vorbildlich. Ihr wisst genau, wie oft welche Anlage gewartet, gereinigt und gepflegt werden muss. Ihr habt einen Plan, wer für was verantwortlich ist. Auf Feedback eurer Verantwortlichen reagiert ihr angemessen. Wenn ihr Dienstleister für die Instandhaltung braucht, werden diese rechtzeitig beauftragt und zuvorkommend behandelt." },
+        { word: "Management-Systeme", desc:"Ihr nutzt die Macht der Management-Systeme sehr pragmatisch. Die Anforderungen und Denk-Werkzeuge der ISO 9001 (QM) sind für euch eine Selbstverständlichkeit. Ihr nutzt und lebt ggfs. mehrere ISO-Normen (14001: Umwelt; 50001: Energie; 45001: Arbeitsschutz; 27001 Informationssicherheit; …). Ihr nutzt die Normen ggfs., auch wenn ihr auf Zertifikate verzichtet." },
+        { word: "Nachhaltigkeits-Strategie", desc:"Ihr habt einen klaren Fahrplan für eure Nachhaltigkeits-Bemühungen. Ihr habt ein Leitbild, Ziele, Roadmaps, Meilensteine und Verantwortliche. Ihr habt Feedback-Kanäle ins Top-Management. Eure Verantwortlichen haben ausreichend Budget, Zeit und Befugnisse um das Unternehmen wirkungsvoll weiter zu entwickeln." },
+        { word: "Rechtskataster", desc:"Natürlich kümmert ihr euch um die geltenden Gesetze. Dafür pflegt ihr eine brauchbare Übersicht und habt Verantwortliche benannt." },
+        { word: "regelmäßige Reviews", desc:"Eure Geschäftsführung fordert regelmäßig Rechenschaft ein und denkt mit. Sie prüft regelmäßig, ob eure Ziele klar, eure Roadmaps plausibel und eure Strategien noch zeitgemäß sind. Bei Bedarf werden Ressourcen und Befugnisse neu verteilt." },
+        { word: "überbetrieblicher Austausch", desc:"Ihr bleibt auf dem Laufenden. Eure Energie- und Umwelt-Profis oder IT-Nerds oder … tauschen sich mit denen aus anderen Unternehmen aus. Ihr nutzt öffentliche Arbeitskreise (z.B. bei der IHK) oder Angebote wie ÖKOprofit, LEEN, EnergyScouts, … Ihr bringt euch in eurer lokalen Wirtschaftsförderung fördernd und fordernd ein." },
+        { word: "Verantwortliche befähigen", desc:"Ihr benennt z.B. Verantwortliche für Nachhaltigkeit, Energie, Umwelt, IT, Personal-Entwicklung, …. Diese Verantwortlichen bekommen Zeit und Ressourcen, sich (gezielt) zu schulen und weiterzubilden. Sie engagieren sich bei Bedarf in überbetrieblichen Arbeitskreisen oder Netzwerken (→ überbetrieblicher Austausch)" },
+        { word: "Verantwortliche benennen", desc:"Für neue Aufgaben und kontinuierliche Veränderung muss jemand Verantwortung übernehmen. Ihr benennt dafür Verantwortliche, die sich um das Erreichen der Ziele, um die Kommunikation zu top-Management und Belegschaft, zum Einhalten von Fristen, um technische Umsetzung, … kümmern. Ideal: Eure Verantwortlichen schult ihr inner- oder außerbetrieblich (→Verantwortliche befähigen)" },
+        { word: "Werte-Kodex", desc:"Bei euch ist klar, wie der Hase in puncto Nachhaltigkeit läuft. Ihr habt do’s und dont’s entwickelt, die euch vor Endlos-Debatten, „des Kaisers neue Kleider“ und Co. schützen. Es ist glasklar erwünscht, den Finger in (Nachhaltigkeits-)Wunden zu legen." },
+        { word: "Wissens-Management", desc:"Das Thema Nachhaltigkeit ist riesig und kompliziert. Notwendiges Wissen und Können ist für gewöhnlich auf wenige Köpfe verteilt (individuelles Wissen). Wichtiger ist „organisationales Wissen“, also Wissen, das alle haben (können). Ähnlich wie bei Wikipedia teilen eure Fachleute und Verantwortliche ihr Wissen. Ihr habt Strukturen zum Sammeln und Austauschen von Wissen geschaffen, z.B. im Intranet, auf einem Laufwerk, in einer Akademie, an Aktionstagen oder …" }
+      ],
+      "5-4": [
+        { word: "Business Model Canvas", desc:"Ihr habt eine genaue Übersicht über euer Geschäftsmodell. Ihr könnt es Externen in wenigen Minuten erklären. Ihr kennt eure (wichtigsten) Kundensegmente, Schlüssel-Aktivitäten, -Ressourcen und Partner, Kostenstrukturen und Einnahmequellen. Ihr wisst über eure Nutzenversprechen und (Kommunikations- und Waren-) Kanäle gut Bescheid. Allen ist klar, wie ihr eure Kundenbeziehungen pflegt." },
+        { word: "eco-Roadmap", desc:"Ihr wisst genau, welche Schritte für mehr ökologische und ökonomische Nachhaltigkeit zu tun sind. Ihr habt Verantwortliche benannt, die sich kümmern (dürfen und können) und bei Verzug informieren." },
+        { word: "Eskalations-Management", desc:"Ihr habt einen genauen Plan, wie ihr mit Beschwerden von Beschäftigten oder Kundinnen und Kunden umgeht. Wer ist für welche Themen Ansprechperson? Wie sind Meldewege? Wer darf was entscheiden?" },
+        { word: "Innovations-Management", desc:"Ihr habt einen glasklaren Plan, wie ihr Produkte entwickelt und in den Markt bringt. Ihr habt benennt und befähigt Verantwortliche. Ihr habt klare Ziele, Feedback-Kanäle, Roadmaps und Meilensteine." },
+        { word: "überbetrieblicher Austausch", desc:"Ihr bleibt auf dem Laufenden. Eure Energie- und Umwelt-Profis oder IT-Nerds oder … tauschen sich mit denen aus anderen Unternehmen aus. Ihr nutzt öffentliche Arbeitskreise (z.B. bei der IHK) oder Angebote wie ÖKOprofit, LEEN, EnergyScouts, … Ihr bringt euch in eurer lokalen Wirtschaftsförderung fördernd und fordernd ein." },
+        { word: "Verantwortliche benennen", desc:"Für neue Aufgaben und kontinuierliche Veränderung muss jemand Verantwortung übernehmen. Ihr benennt dafür Verantwortliche, die sich um das Erreichen der Ziele, um die Kommunikation zu top-Management und Belegschaft, zum Einhalten von Fristen, um technische Umsetzung, … kümmern. Ideal: Eure Verantwortlichen schult ihr inner- oder außerbetrieblich (→Verantwortliche befähigen)" },
+        { word: "Wissens-Management", desc:"Das Thema Nachhaltigkeit ist riesig und kompliziert. Notwendiges Wissen und Können ist für gewöhnlich auf wenige Köpfe verteilt (individuelles Wissen). Wichtiger ist „organisationales Wissen“, also Wissen, das alle haben (können). Ähnlich wie bei Wikipedia teilen eure Fachleute und Verantwortliche ihr Wissen. Ihr habt Strukturen zum Sammeln und Austauschen von Wissen geschaffen, z.B. im Intranet, auf einem Laufwerk, in einer Akademie, an Aktionstagen oder …" },
+        { word: "Suffizienz-Bewusstsein", desc:"Suffizienz ist das höchste Nachhaltigkeits-Gebot. Suffizienz meint, dass immer genug für alle da ist. Unsere Welt ist noch wenig suffizient: manche haben viel zu viel und andere viel zu wenig. Klar: Mangel ist richtig schlimm, aber auch Überfluss erzeugt oft Probleme und Folgekosten (→ true cost)." },
+        { word: "SDG-Kompass", desc:"Ihr wisst, auf welche globalen Nachhaltigkeits-Ziele (SDGs) euer Unternehmen und eure Geschäftsmodelle einzahlen. Ihr habt Zielkonflikte als Risiko im Blick (→ true cost; →Risiko-Analyse). Ihr wisst, wo ihr gut seid und wo Transformation nötig ist." },
+        { word: "Werte-Kodex", desc:"Bei euch ist klar, wie der Hase in puncto Nachhaltigkeit läuft. Ihr habt do’s und dont’s entwickelt, die euch vor Endlos-Debatten, „des Kaisers neue Kleider“ und Co. schützen. Es ist glasklar erwünscht, den Finger in (Nachhaltigkeits-)Wunden zu legen." }
+      ]
+    };
+    
+    // --------------------------------------------------------------
+    // 2. Matrix befüllen
+    // --------------------------------------------------------------
+    document.querySelectorAll('.content').forEach(cell => {
+      const key = `${cell.dataset.row}-${cell.dataset.col}`;
+      (cellWords[key] || []).forEach(item => {
+    
+        // Neues Wort-Element erzeugen
+        const span = document.createElement('span');
+        span.className = 'word weight-2 status-0'; // Start: mittlere Größe, Status 0
+        span.textContent = item.word;
+    
+        // Datenattribute für Logik
+        span.dataset.word   = item.word;  // Name
+        span.dataset.desc   = item.desc;  // Beschreibung
+        span.dataset.weight = '2';        // Gewicht 1-3
+        span.dataset.status = '0';        // Status 0-2
+    
+        // ----------------------------------------------------------
+        // Hover: Beschreibung + Blinken aller Zwillinge
+        // ----------------------------------------------------------
+        span.addEventListener('mouseover', e => {
+          const w = e.target.dataset.word;
+          document.getElementById('wordInfo').textContent = e.target.dataset.desc || "";
+          document.querySelectorAll(`.word[data-word="${w}"]`).forEach(el => el.classList.add('blink'));
+        });
+        span.addEventListener('mouseout', e => {
+          document.getElementById('wordInfo').textContent = "";
+          const w = e.target.dataset.word;
+          document.querySelectorAll(`.word[data-word="${w}"]`).forEach(el => el.classList.remove('blink'));
+        });
+    
+        // ----------------------------------------------------------
+        // Klick: Status ändern (0 → 1 → 2 → 0)
+        // ----------------------------------------------------------
+        span.addEventListener('click', e => {
+          const w = e.currentTarget.dataset.word;
+          const oldS = +e.currentTarget.dataset.status;
+          const newS = (oldS + 1) % 3;
+          document.querySelectorAll(`.word[data-word="${w}"]`)
+            .forEach(el => {
+              el.classList.replace(`status-${oldS}`, `status-${newS}`);
+              el.dataset.status = newS;
+            });
+          recalcAmpeln();
+        });
+    
+        // ----------------------------------------------------------
+        // Doppelklick: Gewicht ändern (1 → 2 → 3 → 1)
+        // ----------------------------------------------------------
+        span.addEventListener('dblclick', e => {
+          e.preventDefault(); // Textauswahl verhindern
+          const w = e.currentTarget.dataset.word;
+          const oldL = +e.currentTarget.dataset.weight;
+          const newL = oldL === 3 ? 1 : oldL + 1;
+          document.querySelectorAll(`.word[data-word="${w}"]`)
+            .forEach(el => {
+              el.classList.replace(`weight-${oldL}`, `weight-${newL}`);
+              el.dataset.weight = newL;
+            });
+          recalcAmpeln();
+        });
+    
+        // ----------------------------------------------------------
+        // Rechtsklick (optional) = wie Doppelklick
+        // ----------------------------------------------------------
+        span.addEventListener('contextmenu', e => {
+          e.preventDefault();
+          const w = e.currentTarget.dataset.word;
+          const oldL = +e.currentTarget.dataset.weight;
+          const newL = oldL === 3 ? 1 : oldL + 1;
+          document.querySelectorAll(`.word[data-word="${w}"]`)
+            .forEach(el => {
+              el.classList.replace(`weight-${oldL}`, `weight-${newL}`);
+              el.dataset.weight = newL;
+            });
+          recalcAmpeln();
+        });
+    
+        // Element ins DOM hängen
+        cell.appendChild(span);
+      });
+    });
+    
+    // --------------------------------------------------------------
+    // 3. Ampelsystem neu berechnen
+    // --------------------------------------------------------------
+    function recalcAmpeln() {
+      document.querySelectorAll('.content').forEach(cell => {
+        const words = Array.from(cell.querySelectorAll('.word'));
+        let total = 0, activeSum = 0;
+    
+        words.forEach(w => {
+          const lvl = +w.dataset.weight;
+          const f   = lvl === 1 ? 0.5 : lvl === 2 ? 1 : 2; // Gewichtsfaktor
+          total += f;
+          const status = +w.dataset.status;
+          const statusFactor = status === 1 ? 0.5 : status === 2 ? 1 : 0; // Statuswert
+          activeSum += f * statusFactor;
+        });
+    
+        const p = total ? activeSum / total * 100 : 0;
+    
+        cell.classList.remove('red','orange','yellow','yellowgreen','green');
+        cell.classList.add(
+          p < 20 ? 'red' :
+          p <= 40 ? 'orange' :
+          p <= 60 ? 'yellow' :
+          p <= 80 ? 'yellowgreen' :
+                    'green'
+        );
+      });
+    }
+    
+    // --------------------------------------------------------------
+    // 4. CSV-Export
+    // --------------------------------------------------------------
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const lines = ['row,col,word,status,weight'];
+      document.querySelectorAll('.content').forEach(cell => {
+        const r = cell.dataset.row, c = cell.dataset.col;
+        cell.querySelectorAll('.word').forEach(w => {
+          lines.push([r, c, w.dataset.word,
+                      w.dataset.status,
+                      w.dataset.weight].join(','));
+        });
+      });
+      const csv  = lines.join('\n');
+      const name = document.getElementById('companyName').value
+                     .replace(/\s+/g,'_')
+                     .replace(/[^a-zA-Z0-9_\-]/g,'')
+                   + '.csv';
+      const blob = new Blob([csv], { type:'text/csv' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+    
+    // --------------------------------------------------------------
+    // 5. CSV-Import
+    // --------------------------------------------------------------
+    const fileInput = document.getElementById('fileInput');
+    document.getElementById('importBtn')
+            .addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const rdr = new FileReader();
+      rdr.onload = ev => {
+        const lines = ev.target.result.split('\n').slice(1);
+        lines.forEach(l => {
+          const [r, c, wrd, stat, wt] = l.trim().split(',');
+          if (!r) return;
+          document.querySelectorAll(
+            `.content[data-row="${r}"][data-col="${c}"]`
+           +` .word[data-word="${wrd}"]`
+          ).forEach(el => {
+            el.classList.replace(`status-${el.dataset.status}`, `status-${stat}`);
+            el.dataset.status = stat;
+            el.classList.replace(`weight-${el.dataset.weight}`, `weight-${wt}`);
+            el.dataset.weight = wt;
+          });
+        });
+        recalcAmpeln();
+      };
+      rdr.readAsText(file);
+    });
+    
+    // --------------------------------------------------------------
+    // 6. Initiale Berechnung beim Laden
+    // --------------------------------------------------------------
+    window.addEventListener('load', recalcAmpeln);
+
+    // Hilfe Fenster
+    document.getElementById('helpBtn').addEventListener('click', () => {
+      document.getElementById('helpOverlay').style.display = 'block';
+      document.getElementById('helpModal').style.display = 'block';
+    });
+
+    function closeHelp() {
+      document.getElementById('helpOverlay').style.display = 'none';
+      document.getElementById('helpModal').style.display = 'none';
+    }
+
+
+    </script>
+  </body>
+</html>
